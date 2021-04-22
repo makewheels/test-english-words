@@ -44,7 +44,7 @@ public class Test {
         File audioFile = new File(getAudioFolder() + File.separator + c, word + ".mp3");
         try {
             FileUtils.copyURLToFile(new URL(url), audioFile);
-            System.out.println(Thread.currentThread().getName() + "\t" + word);
+            System.out.println(Thread.currentThread().getName() + "  " + word);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,7 +52,7 @@ public class Test {
 
     public static void main(String[] args) {
         List<String> words = readWords();
-        ExecutorService executorService = Executors.newFixedThreadPool(40);
+        ExecutorService executorService = Executors.newFixedThreadPool(35);
         words.forEach(word -> executorService.submit(() -> downloadAudio(word)));
         executorService.shutdown();
     }

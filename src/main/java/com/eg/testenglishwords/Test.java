@@ -15,7 +15,7 @@ public class Test {
         return "https://dict.youdao.com/dictvoice?audio=" + word + "&type=" + type;
     }
 
-    public static String getAudioDownloadUrl(String word) {
+    public static String getAudioDownloadUrl(String word, int i) {
         return "https://dict.youdao.com/dictvoice?audio=" + word + "&type=2";
     }
 
@@ -39,11 +39,15 @@ public class Test {
     }
 
     public static void downloadAudio(String word) {
-        String url = getAudioDownloadUrl(word);
+        String type1 = getAudioDownloadUrl(word, 1);
+        String type2 = getAudioDownloadUrl(word, 2);
         char c = word.charAt(0);
-        File audioFile = new File(getAudioFolder() + File.separator + c, word + ".mp3");
+        File audioFile1 = new File(getAudioFolder() + File.separator + c, word + "-1.mp3");
         try {
-            FileUtils.copyURLToFile(new URL(url), audioFile);
+            FileUtils.copyURLToFile(new URL(type1), audioFile1);
+            System.out.println(Thread.currentThread().getName() + "  " + word);
+            File audioFile2 = new File(getAudioFolder() + File.separator + c, word + "-2.mp3");
+            FileUtils.copyURLToFile(new URL(type2), audioFile2);
             System.out.println(Thread.currentThread().getName() + "  " + word);
         } catch (IOException e) {
             e.printStackTrace();

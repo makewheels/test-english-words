@@ -40,11 +40,11 @@ public class Test {
     public static boolean downloadAndCompareMd5(Set<String> md5List, String url, File file) throws IOException {
         FileUtils.copyURLToFile(new URL(url), file);
         System.out.println(Thread.currentThread().getName() + " download " + url);
-        String md5 = DigestUtils.md5Hex(new FileInputStream(file));
+        FileInputStream fileInputStream = new FileInputStream(file);
+        String md5 = DigestUtils.md5Hex(fileInputStream);
+        fileInputStream.close();
         if (md5List.contains(md5)) {
-            System.gc();
             file.delete();
-            file.deleteOnExit();
             return false;
         }
         md5List.add(md5);

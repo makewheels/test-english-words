@@ -44,7 +44,8 @@ public class Test {
         String md5 = DigestUtils.md5Hex(fileInputStream);
         fileInputStream.close();
         if (md5List.contains(md5)) {
-            file.delete();
+            boolean deleteResult = file.delete();
+            System.out.println("file.delete() " + file.getName() + deleteResult);
             return false;
         }
         md5List.add(md5);
@@ -63,7 +64,7 @@ public class Test {
 
     public static void main(String[] args) {
         List<String> words = readWords();
-        ExecutorService executorService = Executors.newFixedThreadPool(1);
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
         words.forEach(word -> executorService.submit(() -> {
             try {
                 downloadAudio(word);

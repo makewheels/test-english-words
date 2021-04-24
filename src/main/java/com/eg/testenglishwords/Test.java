@@ -39,9 +39,12 @@ public class Test {
 
     public static boolean downloadAndCompareMd5(Set<String> md5List, String url, File file) throws IOException {
         FileUtils.copyURLToFile(new URL(url), file);
+        System.out.println(Thread.currentThread().getName() + " download " + url);
         String md5 = DigestUtils.md5Hex(new FileInputStream(file));
         if (md5List.contains(md5)) {
+            System.gc();
             file.delete();
+            file.deleteOnExit();
             return false;
         }
         md5List.add(md5);
@@ -53,14 +56,14 @@ public class Test {
         for (int type = 1; type < 20; type++) {
             String url = getAudioDownloadUrl(word, type + "");
             File audioFile = new File(getAudioFolder() + "/" + word.charAt(0) + "/"
-                    + word + "/" + "-" + type + ".mp3");
+                    + word + "/" + word + "-" + type + ".mp3");
             downloadAndCompareMd5(md5List, url, audioFile);
         }
     }
 
     public static void main(String[] args) {
         List<String> words = readWords();
-        ExecutorService executorService = Executors.newFixedThreadPool(20);
+        ExecutorService executorService = Executors.newFixedThreadPool(1);
         words.forEach(word -> executorService.submit(() -> {
             try {
                 downloadAudio(word);

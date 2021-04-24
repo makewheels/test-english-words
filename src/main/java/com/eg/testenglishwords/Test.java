@@ -42,10 +42,11 @@ public class Test {
         System.out.println(Thread.currentThread().getName() + " download " + url);
         FileInputStream fileInputStream = new FileInputStream(file);
         String md5 = DigestUtils.md5Hex(fileInputStream);
+        System.out.println(md5);
         fileInputStream.close();
         if (md5List.contains(md5)) {
             boolean deleteResult = file.delete();
-            System.out.println("file.delete() " + file.getName() + deleteResult);
+            System.out.println("file.delete() " + file.getName() + " " + deleteResult);
             return false;
         }
         md5List.add(md5);
@@ -54,7 +55,7 @@ public class Test {
 
     public static void downloadAudio(String word) throws IOException {
         Set<String> md5List = new HashSet<>();
-        for (int type = 1; type < 20; type++) {
+        for (int type = 1; type <= 2; type++) {
             String url = getAudioDownloadUrl(word, type + "");
             File audioFile = new File(getAudioFolder() + "/" + word.charAt(0) + "/"
                     + word + "/" + word + "-" + type + ".mp3");
@@ -62,9 +63,10 @@ public class Test {
         }
     }
 
+    //    https://fanyi.baidu.com/gettts?lan=en&text=abstract&spd=3&source=web
     public static void main(String[] args) {
         List<String> words = readWords();
-        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        ExecutorService executorService = Executors.newFixedThreadPool(8);
         words.forEach(word -> executorService.submit(() -> {
             try {
                 downloadAudio(word);
